@@ -3,33 +3,31 @@ package User;
 public class UserNamer {
     public static String currentName;
     public String myname;
-    private static final Object monitor=new Object();
+    private static final Object monitor = new Object();
     public static String tmpName;
+//
+    public UserNamer(String myname) {
+        this.myname = myname;
 
-    public UserNamer(String myname){
-        this.myname=myname;
-
-        if (currentName==null){
-            currentName=this.myname;
-        }
-
-        else if(currentName!=null){
-            tmpName=this.myname;
+        if (currentName == null) {
+            currentName = this.myname;
+        } else {
+            tmpName = this.myname;
         }
 
     }
 
-        public synchronized void printMyName(){
-        synchronized (monitor){
+    public void printMyName() {
+        synchronized (monitor) {
             try {
                 while (true) {
-                    while (currentName != this.myname) {
+                    while (!currentName.equals(this.myname)) {
                         monitor.wait();
                     }
                     System.out.println(this.myname);
                     Thread.sleep(300);
                     currentName = tmpName;
-                    tmpName=this.myname;
+                    tmpName = this.myname;
                     monitor.notify();
                 }
 
@@ -40,4 +38,4 @@ public class UserNamer {
     }
 
 
-    }
+}
